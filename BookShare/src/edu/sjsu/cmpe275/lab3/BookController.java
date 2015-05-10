@@ -23,6 +23,7 @@ import com.sun.xml.internal.ws.resources.HttpserverMessages;
 public class BookController {
 	
 	/**
+	 * Agam
 	 * Get the book from DB and display it to books.jsp
 	 * @return
 	 */
@@ -59,7 +60,7 @@ public class BookController {
 	
 	/**
 	 * Post ad for selling the book
-	 * 
+	 * Agam
 	 */
 	
 
@@ -72,6 +73,7 @@ public class BookController {
 	}
 	
 	/**
+	 * Pranjal Shah
 	 * Request book controller redirecting to post book requirements
 	 * 
 	 */
@@ -102,6 +104,7 @@ public class BookController {
 	}
 	
 	/**
+	 * Pranjal Shah
 	 * get the details of the books required by user and add it to DB
 	 * @return
 	 */
@@ -114,30 +117,40 @@ public class BookController {
 		String publisher = request.getParameter("publisher");
 		String year = request.getParameter("year");
 		String quantity = request.getParameter("quantity");
-		
-		int yr = Integer.parseInt(year);
-		int qty = Integer.parseInt(quantity);
-		
+		int yr=2014;
+		int qty = 1;
+		try{
+			 yr = Integer.parseInt(year);
+			}catch(NumberFormatException n){
+				System.out.println("number format exception for year" + n);
+			}
+		try{
+			qty = Integer.parseInt(quantity);
+		}catch(NumberFormatException n){
+			System.out.println("number format exception for year" + n);
+		}
 		//get the user details using the username
+		Login logindetails = (Login) request.getSession().getAttribute("loginDetails");
 		Crud c = new Crud();
-		Session session = (Session) c.crudOpen();
+		/*Session session = (Session) c.crudOpen();
 		Query query = session.createQuery("from Login where username = :uname");
 		query.setParameter("uname", "badal.jain77@gmail.com");
 		List<?> list = query.list();
 		Login details = (Login)list.get(0);
-		c.crudClose();
+		c.crudClose();*/
 		
 		//set the book object
 		RequiredBooks rb = new RequiredBooks(isbn, title, author, publisher, yr, qty);
-		rb.setPostUserId(details);
+		rb.setPostUserId(logindetails);
 		c.save(rb);
 		
-		ModelAndView mv = new ModelAndView("bookRegister");
-		mv.addObject("what", "buyRequest");
+		ModelAndView mv = new ModelAndView("success");
+		mv.addObject("success", "Thank you! your requirements are successfully posted");
 		return mv;		
 	}
 	
 	/**
+	 * Rishi Khurana
 	 * Post your book to sell
 	 * @param request
 	 * @return
@@ -154,11 +167,27 @@ public class BookController {
 		String price = request.getParameter("price");
 		String quantity = request.getParameter("quantity");
 		String bid = request.getParameter("bid");
-		int yr = Integer.parseInt(year);
-		int qty = Integer.parseInt(quantity);
-		int prc = Integer.parseInt(price);
-		
-		//get the user details using the username
+		if (bid == "" || bid == null){
+			bid = "N";
+		}
+		int yr=2014;
+		int qty = 1;
+		int prc =0;
+		try{
+		 yr = Integer.parseInt(year);
+		}catch(NumberFormatException n){
+			System.out.println("number format exception for year" + n);
+		}
+		try{
+			qty = Integer.parseInt(quantity);
+		}catch(NumberFormatException n){
+			System.out.println("number format exception for year" + n);
+		}
+		try{
+			prc = Integer.parseInt(price);
+		}catch(NumberFormatException n){
+			System.out.println("number format exception for year" + n);
+		}
 		Crud c = new Crud();
 		Session session = (Session) c.crudOpen();
 		Query query = session.createQuery("from Login where username = :uname");
@@ -181,6 +210,7 @@ public class BookController {
 	 * this is called when a user presses to buy a paricular book
 	 * and specfbook page is called
 	 * 
+	 * Badal jain
 	 * @param bookId
 	 * @return
 	 */
@@ -213,6 +243,7 @@ public class BookController {
 	
 	/**
 	 * Submit the user proposal
+	 * Badal Jain
 	 */
 	
 	@RequestMapping(value="/proposal", method=RequestMethod.POST)
@@ -248,7 +279,7 @@ public class BookController {
 	}
 	
 	/**
-	 * 
+	 * Badal jain
 	 * My account redirection
 	 */
 	@RequestMapping (value="/myaccount" , method=RequestMethod.GET)
@@ -299,8 +330,6 @@ public class BookController {
 				List<Object> bookList = new ArrayList<Object>();
 				
 				for(int i=0; i<list.size(); i++){
-				//	System.out.println(((Object[]) list.get(i))[0]);
-				//	System.out.println(((Object[]) list.get(i))[1]);
 					bidList.add(((Object[]) list.get(i))[0]);
 					bookList.add(((Object[]) list.get(i))[1]);
 				}
@@ -315,6 +344,7 @@ public class BookController {
 	}
 	/**
 	 * 
+	 * Rishi Khurana
 	 * Place bid for a Book
 	 * @param bookid
 	 * @param bidPrice
@@ -352,7 +382,7 @@ public class BookController {
 	}
 	
 	/**
-	 * 
+	 * Rishi Khurana
 	 * Accept bid for your book
 	 */
 	
@@ -395,7 +425,7 @@ public class BookController {
 	
 	
 	/**
-	 * 
+	 * Badal Jain 
 	 * Search for a book based on title, author or ISBN
 	 * 
 	 */
@@ -410,12 +440,12 @@ public class BookController {
 		List<?> list;
 		Crud c = new Crud();
 		Session session = (Session) c.crudOpen();
-		Userdetail user = new Userdetail();
-		user = (Userdetail) request.getSession().getAttribute("userDetails");
-		if (user != null){
+		Userdetail user3 = new Userdetail();
+		user3 = (Userdetail) request.getSession().getAttribute("userDetails");
+		if (user3 != null){
 			query = session.createQuery("from Books where isbn like :si or title like :st or author like :sa"
 					+ " and owner.userid <> :uid and available = 'Y'");
-			query.setParameter("uid", user.getUserid());
+			query.setParameter("uid", user3.getUserid());
 		}else{
 			query = session.createQuery("from Books where available = 'Y' and isbn like :si or title like :st or author like :sa");
 		}
@@ -487,34 +517,24 @@ public class BookController {
 		ModelAndView mv = new ModelAndView("myAccount");
 		List<?> list;
 		Crud c = new Crud();
-		//Open the session
-		//Update the proposal to accepted state
+		
 		Proposals proposal = new Proposals();
 		proposal = (Proposals) c.get(proposal, proposalId);
 		proposal.setAccepted('Y');
 		c.update(proposal);
-		
-		//Update the required book's fulfill proposal status to Yes
-		
+
 		RequiredBooks rb = new RequiredBooks();
 		rb = (RequiredBooks) c.get(rb, postId);
 		rb.setFulfilled('Y');
 		c.update(rb);
-		
-		//get the updated list of proposals from the database
+
 		Session session = (Session) c.crudOpen();
-		
-	/*	//Set all the proposals for this requirement to inactive
-		query = session.createQuery("update Proposals set active = 'no' where proposalForPostId.postId = :postId");
-		query.setLong("postId", postId);
-		query.executeUpdate();*/
-		
+
 		query = session.createQuery("from Proposals P inner join P.proposerId UD"
 					+ " inner join P.proposalForPostId RB where P.proposerId.userid <> :usid "
 					+ " and RB.postUserId.userid = :usid"
 					+ " and P.accepted ='N' and P.active = 'yes'");
 		
-		//System.out.println("userid   " + uid);
 		query.setParameter("usid", uid);
 		list = query.list();
 		mv.addObject("props", list);
@@ -567,13 +587,13 @@ public class BookController {
 		if(null != request.getParameter("rating")){
 			Crud c = new Crud();
 			Feedback feedback = new Feedback();
-			Userdetail user = new Userdetail();
-			user = (Userdetail) request.getSession().getAttribute("userDetails");
+			Userdetail user2 = new Userdetail();
+			user2 = (Userdetail) request.getSession().getAttribute("userDetails");
 			feedback.setComments(request.getParameter("comment"));
 			feedback.setRating(Integer.parseInt(request.getParameter("rating")));
-			feedback.setUserId(user);
+			feedback.setUserId(user2);
 			feedback.setRole(request.getParameter("userRole"));
-			//System.out.println("usertype" + (String)request.getParameter("userRole"));
+			
 			feedback.setRatingForUser(Integer.parseInt(request.getParameter("ratingTo")));
 			c.save(feedback);
 			mv = new ModelAndView("success");
