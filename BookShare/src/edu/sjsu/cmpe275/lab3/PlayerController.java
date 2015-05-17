@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.context.request.WebRequest;
 
-import com.sun.javafx.collections.MappingChange.Map;
 @Controller
 public class PlayerController {
 	

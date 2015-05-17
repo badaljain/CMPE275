@@ -28,14 +28,14 @@ public class BookController {
 	 * @return
 	 */
 	@RequestMapping(value="/books", method = RequestMethod.GET)
-	public ModelAndView getbooks(HttpServletRequest request){
+	public ModelAndView getBooks(HttpServletRequest request) throws NullPointerException{
 		String action = (String) request.getParameter("action");
 		long uid;
 		try{
 			uid = (Long) request.getSession().getAttribute("userid");
 		}catch(NullPointerException e){
-			System.out.println("User not logged in");
-			uid = 0;
+			ModelAndView view = new ModelAndView("login");
+			return view;
 		}
 		
 		List<?> list;
@@ -65,8 +65,7 @@ public class BookController {
 	
 
 	@RequestMapping(value="/bookpost", method = RequestMethod.GET)
-	public ModelAndView postBooks(){
-		
+	public ModelAndView postBook(){
 		ModelAndView mv = new ModelAndView("bookRegister");
 		mv.addObject("what", "sellRequest");
 		return mv;
@@ -117,31 +116,22 @@ public class BookController {
 		String publisher = request.getParameter("publisher");
 		String year = request.getParameter("year");
 		String quantity = request.getParameter("quantity");
-		int yr=2014;
-		int qty = 1;
-		try{
-			 yr = Integer.parseInt(year);
-			}catch(NumberFormatException n){
-				System.out.println("number format exception for year" + n);
-			}
-		try{
-			qty = Integer.parseInt(quantity);
-		}catch(NumberFormatException n){
-			System.out.println("number format exception for year" + n);
-		}
+		
+		int yr = Integer.parseInt(year);
+		int qty = Integer.parseInt(quantity);
+		
 		//get the user details using the username
-		Login logindetails = (Login) request.getSession().getAttribute("loginDetails");
 		Crud c = new Crud();
-		/*Session session = (Session) c.crudOpen();
+		Session session = (Session) c.crudOpen();
 		Query query = session.createQuery("from Login where username = :uname");
 		query.setParameter("uname", "badal.jain77@gmail.com");
 		List<?> list = query.list();
 		Login details = (Login)list.get(0);
-		c.crudClose();*/
+		c.crudClose();
 		
 		//set the book object
 		RequiredBooks rb = new RequiredBooks(isbn, title, author, publisher, yr, qty);
-		rb.setPostUserId(logindetails);
+		rb.setPostUserId(details);
 		c.save(rb);
 		
 		ModelAndView mv = new ModelAndView("success");
@@ -167,27 +157,10 @@ public class BookController {
 		String price = request.getParameter("price");
 		String quantity = request.getParameter("quantity");
 		String bid = request.getParameter("bid");
-		if (bid == "" || bid == null){
-			bid = "N";
-		}
-		int yr=2014;
-		int qty = 1;
-		int prc =0;
-		try{
-		 yr = Integer.parseInt(year);
-		}catch(NumberFormatException n){
-			System.out.println("number format exception for year" + n);
-		}
-		try{
-			qty = Integer.parseInt(quantity);
-		}catch(NumberFormatException n){
-			System.out.println("number format exception for year" + n);
-		}
-		try{
-			prc = Integer.parseInt(price);
-		}catch(NumberFormatException n){
-			System.out.println("number format exception for year" + n);
-		}
+		int yr = Integer.parseInt(year);
+		int qty = Integer.parseInt(quantity);
+		int prc = Integer.parseInt(price);
+		
 		Crud c = new Crud();
 		Session session = (Session) c.crudOpen();
 		Query query = session.createQuery("from Login where username = :uname");
