@@ -19,9 +19,6 @@
 		var regForm = document.forms['buyForm'];
 		alert(loginVal + bookId);
 		regForm.method = "POST";
-		/* regForm.action = "http://localhost:8080/Poker/login/" + loginVal + "?bookId=" + bookId2
-				+ "&action=buy";
-		 */
 		if(loginVal == "noLogin"){
 			regForm.action = "<%=request.getContextPath()%>/login/?bookId=" + bookId
 					+ "&action=buy" ;
