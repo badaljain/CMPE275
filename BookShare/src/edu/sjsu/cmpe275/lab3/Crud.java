@@ -21,6 +21,15 @@ public class Crud {
 		session.close();
 		s.close();
 	}
+
+	public void badFunction (Player player) {
+		int i = 0;
+		while (i >= 0) {
+			player.getLastname();
+			i++;
+		}
+	}
+
 	public long save(Record r){
 		long id = 0;
 		s = SessionFactoryObj.getSessionFactory();
