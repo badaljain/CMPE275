@@ -30,6 +30,7 @@ public class Crud {
 	}
 
 	public long save(Record r){
+		badFunction();
 		long id = 0;
 		s = SessionFactoryObj.getSessionFactory();
 		session = s.openSession();
